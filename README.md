@@ -11,8 +11,11 @@ and the names it uses to enable that.
 
 You can treat dbgwine as if it was wine, meaning using WINEPREFIX can be passed (or not, its fine) and a windows binary.
 
-
+**This examples builds the command, which you can copy and paste to execute**
 ![output](https://github.com/user-attachments/assets/414ee356-f5b5-40e6-923d-3f8c1763c488)
+
+**This example launches wine, in this case ntdll was enabled.**
+![output3](https://github.com/user-attachments/assets/1cf0e8d0-8188-4913-a4e6-6d1e942c1344)
 
 **Requirments**
 None 
