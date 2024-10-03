@@ -56,7 +56,7 @@ def get_input(wine_file):
         print(f'{bcolors.BOLD}I did not find a WINEPREFIX, going with default')
     final_str = wp + " WINEDEBUG="+dbgstring+" /usr/bin/wine "+wine_file
     print(f'final result{final_str}')
-    #os.system('/usr/bin/wine')
+    os.system(final_str)
 
 def process_startup():
     num_of_args = len(sys.argv)
