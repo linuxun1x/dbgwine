@@ -24,11 +24,13 @@ copy dbgwine and channels.txt to your path.
 **Running**
 Using a WINEPREFIX
 
-WINEPREFIX=/app/wine/dotnet4 dbgwine /app/wine/dotnet4/drive_c/windows/notepad.exe
+`WINEPREFIX=/app/wine/dotnet4 dbgwine /app/wine/dotnet4/drive_c/windows/notepad.exe`
+
 or
-WINEPREFIX=/app/wine/dotnet4 python dbgwine /app/wine/dotnet4/drive_c/windows/notepad.exe
+`WINEPREFIX=/app/wine/dotnet4 python dbgwine /app/wine/dotnet4/drive_c/windows/notepad.exe`
+
 or 
-dbgwine ~/.wine/drive_c/windows/notepad.exe
+`dbgwine ~/.wine/drive_c/windows/notepad.exe`
 
 **Future?**
 If I find it useful, I would like the menu to be in curses and have logging cleanup/options, better arg parsing
