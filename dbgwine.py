@@ -1,6 +1,7 @@
 import os
 import sys
-
+import tty
+import termios
 hash_options = {}
 class bcolors:
     HEADER = '\033[95m'
@@ -47,16 +48,25 @@ def get_input(wine_file):
     print(f'{bcolors.OKBLUE}{bcolors.UNDERLINE}Ok options ',end="")
     for each_space in the_input_array:
         print(f' {bcolors.UNDERLINE} {hash_options[int(each_space)]}', end="")
-        dbgstring += "+" + hash_options[int(each_space)]+", "
+        dbgstring += ",+" + hash_options[int(each_space)]
     print(f' are enabled{bcolors.ENDC}')
     try:  
         wp = "WINEPREFIX="+os.environ["WINEPREFIX"]
     except: 
-        wp = ""
-        print(f'{bcolors.BOLD}I did not find a WINEPREFIX, going with default')
-    final_str = wp + " WINEDEBUG="+dbgstring+" /usr/bin/wine "+wine_file
-    print(f'final result{final_str}')
-    os.system(final_str)
+        wp = "WINEPREFIX=~/.wine"
+        #print(f'{bcolors.BOLD}I did not find a WINEPREFIX, going with default')
+    final_str = wp + " WINEDEBUG="+dbgstring+" /usr/bin/wine "+wine_file 
+    
+    
+    return final_str
+
+
+    
+def summarize(launch):
+    running = True
+    print(f'{launch}')
+    print(f'\nPress l to launch, b to quit, c to send to clipboard, t for toggle outputing log file to /tmp/out.log')
+
 
 def process_startup():
     num_of_args = len(sys.argv)
@@ -66,6 +76,11 @@ def process_startup():
         wine_file = sys.argv[num_of_args-1]
         if os.path.exists(wine_file):
             print(f"Hey! We got a winner! using {wine_file}")
+            print("just need to make it unix friendly...")
+            wine_file = wine_file.replace(" ","\ ")
+            wine_file = wine_file.replace("(","\(")
+            wine_file = wine_file.replace(")","\)")
+            print(f"{wine_file}")
             return wine_file
     except:
         print(f'just going to exit, I expected the last argument to be a windows binary, but the path is wrong. Sorry')
@@ -75,5 +90,34 @@ def process_startup():
 if __name__ == '__main__':
     wine_file = process_startup()
     whats_avaiable(where_ami())
-    get_input(wine_file)
+    launch = get_input(wine_file)
+
+    default = launch
+    t = 1
+    summarize(launch)
+    orig_settings = termios.tcgetattr(sys.stdin)
+    
+    tty.setcbreak(sys.stdin)
+    x = 0
+    while x != chr(27): # ESC
+        x=sys.stdin.read(1)[0]
+        
+        if x == 't':
+            
+            t += 1
+            if t % 2 == 0:
+                launch += ">> /tmp/output.log"
+                print(f'Enabled Log to file')
+            else:
+                launch = default
+            summarize(launch)
+        if x == 'l':
+            os.system(launch)
+        if x == 'b' or x == 'q':
+            break
+        if x == 'c':
+            str = "echo " +launch +" | xclip -sel clip "
+            os.system(str)
+            print("Coppied to clipboard")
+    
 
